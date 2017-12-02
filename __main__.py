@@ -1,10 +1,14 @@
-from feature import get_feat
-from process import train, predict
+from dict import get_dict
+from percept import Percept
+from outputter import output
 
 train_file = 'train.txt'
 test_file = 'test.txt'
 output_file = 'answer.txt'
 
-dict = get_feat(train_file)
-weight_vec = train(dict, train_file)
-predict(dict, weight_vec, test_file, output_file)
+label_set = {'B', 'M', 'E', 'S'}
+
+perc = Percept(get_dict(train_file, label_set), label_set)
+perc.train(train_file, 1)   # The latter argument stands for loop times
+
+output(perc, test_file, output_file)
