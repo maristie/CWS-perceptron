@@ -41,8 +41,8 @@ def get_label(sent, dict, weight_vec, sum_vec,
                     pred_index = dict[gram + '_' + pred_label]
                     weight_vec[real_index] += 1
                     weight_vec[pred_index] -= 1
-                    #sum_vec[real_index] += remain
-                    #sum_vec[pred_index] -= remain
+                    sum_vec[real_index] += remain
+                    sum_vec[pred_index] -= remain
             remain -= 1
 
         else:

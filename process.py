@@ -46,13 +46,12 @@ def process_txt(dict, weight_vec, file_name, mode = 'p', output_file = ''):
                 segment(sent, label, output_file)
 
             newline = f.readline()
-'''
+
     if mode == 't':
-        for elem in label_set:
-            for i in range(dict_len):
-                offset = sum_vec[i] / (total_char + 1)
-                weight_vec[i] = offset + init_vec[i]
-'''
+        for i in range(dict_len):
+            offset = sum_vec[i] / (total_char + 1)
+            weight_vec[i] = offset + init_vec[i]
+
 
 def train(dict, train_file):
     length = len(dict)
