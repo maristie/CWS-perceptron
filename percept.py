@@ -8,7 +8,7 @@ class Percept:
         self.wgt_vec = [0] * len(self.dict)
 
         # Training configurations
-        self.remain_tag_set = tag_set
+        self.remain_tag_set = tag_set.copy()
         self.rand_tag = self.remain_tag_set.pop()
 
 
