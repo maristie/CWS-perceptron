@@ -69,7 +69,8 @@ class Percept:
         self.total_train_times = self.remain_train_times = \
             self.train_times_count(train_file, loop_times)
 
-        sum_vec = [0] * len(self.dict)  # Store the sum of weight vectors
+        init_vec = self.wgt_vec.copy()  # Store the initial weight vector
+        sum_vec = [0] * len(self.dict)  # Store the sum of differentials
 
         with open(train_file) as f:
             lines = f.readlines()
@@ -84,7 +85,8 @@ class Percept:
 
         # Averaged perceptron
         for i in range(len(self.wgt_vec)):
-            self.wgt_vec[i] = sum_vec[i] / (self.total_train_times + 1)
+            self.wgt_vec[i] = \
+                init_vec[i] + sum_vec[i] / (self.total_train_times + 1)
 
     # Return a label sequence
     def pred_by_line(self, line):
