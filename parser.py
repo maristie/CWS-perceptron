@@ -1,4 +1,5 @@
-# Parse a segmented or unsegmented line and return its words and tags
+# Parse a segmented line and return its words and tags
+
 def parse(line):
     length = len(line)  # length of sentence line
     no_use_char = {' ', '\n', '\r'} # chars of no use

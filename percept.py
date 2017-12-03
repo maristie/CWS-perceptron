@@ -57,7 +57,7 @@ class Percept:
 
             real_tag = seq_tag[i]
 
-            # If result isn't correct
+            # If prediction result isn't correct
             if pred_tag != real_tag:
                 for gram in gram_set:
                     real_index = self.dict[gram + '_' + real_tag]
@@ -69,6 +69,7 @@ class Percept:
                     sum_vec[real_index] += self.train_times
                     sum_vec[pred_index] -= self.train_times
 
+            # No matter prediction correct or wrong, train_times increments by 1
             self.train_times += 1
 
 
@@ -84,7 +85,7 @@ class Percept:
             for raw_line in lines:
                 temp_tuple = parse(raw_line)
                 line = temp_tuple[0]    # Line of valid characters
-                tag = temp_tuple[1]   # tags for each character
+                tag = temp_tuple[1]     # Tags for each character
 
                 self.train_by_line(line, tag, sum_vec)
 
@@ -95,7 +96,7 @@ class Percept:
 
     # Return a tag sequence
     def pred_by_line(self, line):
-        tag = []  # Initial tag array
+        tag = []  # Initial tag sequence
 
         for i in range(len(line)):
             gram_set = get_gram(line, i)
