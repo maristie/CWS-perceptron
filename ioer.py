@@ -1,7 +1,7 @@
 # Input / Output functions
 
 def segment(line, label, output_file):
-    with open(output_file, 'a') as f:
+    with open(output_file, 'a', encoding = 'UTF-8') as f:
         for i in range(len(line)):
             f.write(line[i])
             if i == len(line) - 1:
@@ -11,9 +11,10 @@ def segment(line, label, output_file):
 
 
 def output_pred(percept, test_file, output_file):
-    with open(output_file, 'w') as f: pass  # Clear the output file
+    # Clear the output file
+    with open(output_file, 'w', encoding = 'UTF-8') as f: pass
 
-    with open(test_file) as f:
+    with open(test_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
     for raw_line in lines:
@@ -24,7 +25,7 @@ def output_pred(percept, test_file, output_file):
 
 
 def output_dict(feat_dict, output_file):
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding = 'UTF-8') as f:
         for key in feat_dict:
             pair = key + ' ' + str(feat_dict[key]) + '\r\n'
             f.write(pair)
@@ -33,7 +34,7 @@ def output_dict(feat_dict, output_file):
 def input_dict(input_file):
     dict = {}
 
-    with open(input_file) as f:
+    with open(input_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
     for pair in lines:
@@ -44,13 +45,13 @@ def input_dict(input_file):
 
 
 def output_wgt_vec(vec, output_file):
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding = 'UTF-8') as f:
         for elem in vec:
             f.write(str(elem) + '\r\n')
 
 
 def input_wgt_vec(input_file):
-    with open(input_file) as f:
+    with open(input_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
     length = len(lines) - 1

@@ -62,32 +62,22 @@ class Percept:
                 for gram in gram_set:
                     real_index = self.dict[gram + '_' + real_label]
                     pred_index = self.dict[gram + '_' + pred_label]
-                    self.wgt_vec[real_index] += 1
-                    self.wgt_vec[pred_index] -= 1
-                    sum_vec[real_index] += self.remain_train_times
-                    sum_vec[pred_index] -= self.remain_train_times
-                    self.remain_train_times -= 1
 
+                    self.wgt_vec[real_index] += 1   # Plus correct component
+                    self.wgt_vec[pred_index] -= 1   # Minus wrong component
 
-    def train_times_count(self, train_file, loop_times):
-        train_times = 0
-        with open(train_file) as f:
-            lines = f.readlines()
+                    sum_vec[real_index] += self.train_times
+                    sum_vec[pred_index] -= self.train_times
 
-        for line in lines:
-            train_times += len(parse(line)[0])  # Add the length of sentence
-
-        return train_times * loop_times # Calculate the training times
+                    self.train_times += 1
 
 
     def train(self, train_file, loop_times):
-        self.total_train_times = self.remain_train_times = \
-            self.train_times_count(train_file, loop_times)
+        self.train_times = 1
 
-        init_vec = self.wgt_vec.copy()  # Store the initial weight vector
         sum_vec = [0] * len(self.dict)  # Store the sum of differentials
 
-        with open(train_file) as f:
+        with open(train_file, 'r', encoding = 'UTF-8') as f:
             lines = f.readlines()
 
         for i in range(loop_times):
@@ -100,8 +90,7 @@ class Percept:
 
         # Averaged perceptron
         for i in range(len(self.wgt_vec)):
-            self.wgt_vec[i] = \
-                init_vec[i] + sum_vec[i] / (self.total_train_times + 1)
+            self.wgt_vec[i] -= sum_vec[i] / self.train_times
 
 
     # Return a label sequence

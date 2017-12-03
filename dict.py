@@ -37,7 +37,7 @@ def add_feat(line, dict, label_set):
 def get_dict(train_file, label_set):
     dict = {}
 
-    with open(train_file) as f:
+    with open(train_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
     for line in lines:
