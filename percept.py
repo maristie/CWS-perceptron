@@ -25,40 +25,96 @@ class Percept:
             if feat in self.dict:
                 total_score += self.wgt_vec[self.dict[feat]]
 
+        total_score += self.wgt_vec[self.dict[pretag + '_' + tag]]
+
         return total_score
 
 
-    def get_best_tag(self, gram_set):
-        # Set initial best_score as negative infinity
-        best_score = float('-inf')
+    def get_best_pretag(self, gram_set, tag, pre_best_score):
+        # Pick any pretag as the initial best pretag
+        best_score = \
+            pre_best_score[0][self.rand_tag] \
+            + self.score(gram_set, self.rand_tag, tag)
 
+        best_pretag = self.rand_tag
+
+        # Get best_score and best_pretag by comparing
+        for pretag in self.remain_tag_set:
+            pretag_score = \
+                pre_best_score[0][pretag] + self.score(gram_set, pretag, tag)
+            if pretag_score > best_score:
+                best_score = pretag_score
+                best_pretag = pretag
+
+        # Set best score for current tag
+        pre_best_score[1][tag] = best_score
+
+        return best_pretag
+
+
+    # Return best tag path
+    def find_best_path(pre_best_tag, final_best_tag):
+        length = len(pre_best_tag)
+        path = [final_best_tag] * length    # Initialize tag path
+
+        for i in range(length - 1, 0, -1):  # Find best tag path
+            path[i - 1] = pre_best_tag[i][path[i]]
+
+        return path
+
+
+    # Return a predicted tag sequence using Viterbi algorithm
+    def pred_by_line(self, line):
+        length = len(line)
+
+        # 0 for previous best scores of different tags, and 1 for current ones
+        pre_best_score = [dict()] * 2
+        # pre_best_tag records best tag previous to the current one
+        pre_best_tag = [dict()] * length
+
+        # Record gram set for characters in the sentence
+        gram_set = [set()] * length
+        gram_set[0] = get_gram(line, 0)
+
+        # Initialization for first character
         for tag in self.tag_set:
-            feat_set = set()    # Feature set
-            for elem in gram_set:
-                feat_set.add(elem + '_' + tag)
+            # Score and store
+            pre_best_score[0][tag] = score(gram_set[0], '*', tag)
 
-            tag_score = self.score(feat_set)    # Score by features
+        # 0 (first) was initialized above
+        for i in range(1, length):
+            gram_set[i] = get_gram(line, i)
 
-            if tag_score > best_score:
-                best_score = tag_score
-                best_tag = tag
+            for tag in self.tag_set:
+                pre_best_tag[i][tag] = \
+                    self.get_best_pretag(gram_set[i], tag, pre_best_score)
 
-        return best_tag
+            # Current best scores will be previous ones in next loop
+            pre_best_score[0] = pre_best_score[1].copy()
+
+        # Get final best tag
+        total_best_score = pre_best_score[0][self.rand_tag]
+        final_best_tag = self.rand_tag
+
+        for tag in self.remain_tag_set:
+            tag_best_score = pre_best_score[0][tag]
+            if tag_best_score > total_best_score:
+                total_best_score = tag_best_score
+                final_best_tag = tag
+
+        return find_best_seq(pre_best_tag, final_best_tag)
 
 
-    # Train by a line that has been tagged as seq_tag
-    def train_by_line(self, line, seq_tag, sum_vec):
-        line_len = len(line)
+    # Train by a line that has been tagged as real_tag_seq
+    def train_by_line(self, line, real_tag_seq, sum_vec):
+        pred_best_seq = pred_by_line(line)  # Get predicted tag sequence
 
-        for i in range(line_len):
-            # Predict tag for the i th char in the line
-            gram_set = get_gram(line, i)
-            pred_tag = self.get_best_tag(gram_set)
-
-            real_tag = seq_tag[i]
-
+        for i in range(length):
+            real_tag = real_tag_seq[i]
+            pred_tag = pred_best_seq[i]
             # If prediction result isn't correct
-            if pred_tag != real_tag:
+            if pred_tag[i] != real_tag[i]
+                # Adjustment for common node features
                 for gram in gram_set:
                     real_index = self.dict[gram + '_' + real_tag]
                     pred_index = self.dict[gram + '_' + pred_tag]
@@ -69,8 +125,25 @@ class Percept:
                     sum_vec[real_index] += self.train_times
                     sum_vec[pred_index] -= self.train_times
 
-            # No matter prediction correct or wrong, train_times increments by 1
-            self.train_times += 1
+                # Adjustment for edge features
+                if i == 0:
+                    real_edge = '*_' + real_tag
+                    pred_edge = '*_' + pred_tag
+                else:
+                    real_edge = real_tag_seq[i - 1] + '_' + real_tag
+                    pred_edge = pred_best_seq[i - 1] + '_' + pred_tag
+
+                real_index = self.dict[real_edge]
+                pred_index = self.dict[pred_edge]
+
+                self.wgt_vec[real_index] += 1
+                self.wgt_vec[pred_index] -= 1
+
+                sum_vec[real_index] += self.train_times
+                sum_vec[pred_index] -= self.train_times
+
+        # No matter prediction correct or wrong, train_times increments by 1
+        self.train_times += 1
 
 
     def train(self, train_file, iter_times):
@@ -92,14 +165,3 @@ class Percept:
         # Averaged perceptron
         for i in range(len(self.wgt_vec)):
             self.wgt_vec[i] -= sum_vec[i] / self.train_times
-
-
-    # Return a tag sequence
-    def pred_by_line(self, line):
-        tag = []  # Initial tag sequence
-
-        for i in range(len(line)):
-            gram_set = get_gram(line, i)
-            tag.append(self.get_best_tag(gram_set))
-
-        return tag
