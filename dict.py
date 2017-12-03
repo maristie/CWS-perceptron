@@ -7,7 +7,7 @@ def get_gram(line, index):
 
     # Get 1, 2, 3-grams with position information
     # p for previous, m for middle, n for next
-    gram_set.add(line[index] + '_m')
+    gram_set.add(line[i] + '_m')
     if i == 0 and i + 1 < length:
         gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn'}
     elif i == length - 1:
