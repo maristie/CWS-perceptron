@@ -37,7 +37,14 @@ def get_dict(train_file, tag_set):
     with open(train_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
+    # Add node features to dictionary from train file
     for line in lines:
         add_feat(parse(line)[0], dict, tag_set)
+
+    # Add edge features
+    for pre_tag in tag_set | {'*'}:
+        for suf_tag in tag_set:
+            dict_len = len(dict)
+            dict[pre_tag + '_' + suf_tag] = dict_len
 
     return dict
