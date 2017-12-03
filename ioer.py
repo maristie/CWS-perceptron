@@ -11,8 +11,7 @@ def segment(line, label, output_file):
 
 
 def output_pred(percept, test_file, output_file):
-    # Clear the output file
-    with open(output_file, 'w') as f: pass
+    with open(output_file, 'w') as f: pass  # Clear the output file
 
     with open(test_file) as f:
         lines = f.readlines()
@@ -30,6 +29,7 @@ def output_dict(feat_dict, output_file):
             pair = key + ' ' + str(feat_dict[key]) + '\r\n'
             f.write(pair)
 
+
 def input_dict(input_file):
     dict = {}
 
@@ -42,10 +42,12 @@ def input_dict(input_file):
 
     return dict
 
+
 def output_wgt_vec(vec, output_file):
     with open(output_file, 'w') as f:
         for elem in vec:
             f.write(str(elem) + '\r\n')
+
 
 def input_wgt_vec(input_file):
     with open(input_file) as f:

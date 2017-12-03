@@ -12,12 +12,12 @@ class Percept:
         self.rand_label = self.remain_label_set.pop()
 
 
-    def get_wgt_vec():
-        return self.wgt_vec.copy()
+    def get_wgt_vec(self):
+        return self.wgt_vec
 
 
-    def set_wgt_vec(vec):
-        self.wgt_vec = vec.copy()
+    def set_wgt_vec(self, wgt_vec):
+        self.wgt_vec = wgt_vec
 
 
     # Score with gram set and label

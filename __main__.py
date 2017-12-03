@@ -21,14 +21,11 @@ output_dict(feat_dict, dict_file)
 # Read dictionary from existing file
 feat_dict = input_dict(dict_file)
 
-'''
 # Set up a perceptron with dictionary of features and the label set
 perc = Percept(feat_dict, label_set)
 
-for i in range(5)
-    perc.train(train_file, 1)   # The latter argument stands for loop times
+perc.train(train_file, 5)   # The latter argument stands for loop times
 
-perc.get_wgt_vec()
+output_wgt_vec(perc.get_wgt_vec(), wgt_vec_file)
 
 output_pred(perc, test_file, output_file)
-'''
