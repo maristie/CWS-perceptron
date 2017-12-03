@@ -54,10 +54,10 @@ def input_wgt_vec(input_file):
     with open(input_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
-    length = len(lines) - 1
+    length = len(lines)
     wgt_vec = [0] * length
 
-    for num in lines:
-        wgt_vec[i] = float(num)
+    for i in range(length):
+        wgt_vec[i] = float(lines[i])
 
     return wgt_vec
