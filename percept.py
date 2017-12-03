@@ -72,7 +72,7 @@ class Percept:
                     self.train_times += 1
 
 
-    def train(self, train_file, loop_times):
+    def train(self, train_file, iter_times):
         self.train_times = 1
 
         sum_vec = [0] * len(self.dict)  # Store the sum of differentials
@@ -80,7 +80,7 @@ class Percept:
         with open(train_file, 'r', encoding = 'UTF-8') as f:
             lines = f.readlines()
 
-        for i in range(loop_times):
+        for i in range(iter_times):
             for raw_line in lines:
                 temp_tuple = parse(raw_line)
                 line = temp_tuple[0]    # Line of valid characters
