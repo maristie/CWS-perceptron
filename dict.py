@@ -19,6 +19,7 @@ def get_gram(line, index):
 
     return gram_set
 
+
 def add_feat(line, dict, label_set):
     line_gram_set = set()
 
@@ -31,6 +32,7 @@ def add_feat(line, dict, label_set):
             if feat not in dict:
                 dict_len = len(dict)
                 dict[feat] = dict_len
+
 
 def get_dict(train_file, label_set):
     dict = {}

@@ -6,12 +6,18 @@ class Percept:
     def __init__(self, feat_dict, label_set):
         self.dict = feat_dict
         self.wgt_vec = [0] * len(self.dict)
+
+        # Training configurations
         self.remain_label_set = label_set
         self.rand_label = self.remain_label_set.pop()
 
 
     def get_wgt_vec():
         return self.wgt_vec.copy()
+
+
+    def set_wgt_vec(vec):
+        self.wgt_vec = vec.copy()
 
 
     # Score with gram set and label
