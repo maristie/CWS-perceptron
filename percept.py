@@ -68,18 +68,22 @@ class Percept:
     def pred_by_line(self, line, gram_set = []):
         length = len(line)
 
+        # If it's an empty line, then return an empty sequence
+        if length == 0:
+            return []
+
         # 0 for previous best scores of different tags, and 1 for current ones
         pre_best_score = [dict()] * 2
         # pre_best_tag records best tag previous to the current one
         pre_best_tag = [dict()] * length
 
-        if length > 0:
-            gram_set.append(get_gram(line, 0))  # Record get_gram results
+        # Record get_gram results
+        gram_set.append(get_gram(line, 0))
 
-            # Initialization for first character
-            for tag in self.tag_set:
-                # Score and store
-                pre_best_score[0][tag] = self.score(gram_set[0], '*', tag)
+        # Initialization for first character
+        for tag in self.tag_set:
+            # Score and store
+            pre_best_score[0][tag] = self.score(gram_set[0], '*', tag)
 
         # 0 (first) was initialized above
         for i in range(1, length):
@@ -89,7 +93,7 @@ class Percept:
                     self.get_best_pretag(gram_set[i], tag, pre_best_score)
 
             # Current best scores will be previous ones in next loop
-            pre_best_score[0] = pre_best_score[1].deepcopy()
+            pre_best_score[0] = pre_best_score[1].copy()
 
         # Get final best tag
         total_best_score = pre_best_score[0][self.rand_tag]
