@@ -42,9 +42,9 @@ def get_dict(train_file, tag_set):
         add_feat(parse(line)[0], dict, tag_set)
 
     # Add edge features
-    for pre_tag in tag_set | {'*'}:
-        for suf_tag in tag_set:
+    for pretag in tag_set | {'*'}:
+        for suftag in tag_set:
             dict_len = len(dict)
-            dict[pre_tag + '_' + suf_tag] = dict_len
+            dict[pretag + '_' + suftag] = dict_len
 
     return dict
