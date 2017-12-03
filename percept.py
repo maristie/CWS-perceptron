@@ -12,12 +12,12 @@ class Percept:
         self.rand_tag = self.remain_tag_set.pop()
 
 
-    def get_wgt_vec(self):
-        return self.wgt_vec
+    def get_wgt_vec(self):  # Get the copy of weight vector
+        return self.wgt_vec.copy()
 
 
-    def set_wgt_vec(self, wgt_vec):
-        self.wgt_vec = wgt_vec
+    def set_wgt_vec(self, wgt_vec): # Set weight vector as the copy of wgt_vec
+        self.wgt_vec = wgt_vec.copy()
 
 
     # Score with gram set and tag
