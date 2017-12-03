@@ -22,7 +22,7 @@ tag_set = {'B', 'M', 'E', 'S'}    # tags used for segmentation
 feat_dict = input_dict(dict_file)
 
 # Set up a perceptron with dictionary of features and the tag set
-# perc = Percept(feat_dict, tag_set)
+perc = Percept(feat_dict, tag_set)
 
 # Train and output weight vector
 perc.train(train_file, iter_times)

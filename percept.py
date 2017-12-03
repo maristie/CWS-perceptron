@@ -53,7 +53,7 @@ class Percept:
 
 
     # Return best tag path
-    def find_best_path(pre_best_tag, final_best_tag):
+    def find_best_path(self, pre_best_tag, final_best_tag):
         length = len(pre_best_tag)
         path = [final_best_tag] * length    # Initialize tag path
 
@@ -64,7 +64,8 @@ class Percept:
 
 
     # Return a predicted tag sequence using Viterbi algorithm
-    def pred_by_line(self, line):
+    # gram_set is a trick to improve space and time performance
+    def pred_by_line(self, line, gram_set = []):
         length = len(line)
 
         # 0 for previous best scores of different tags, and 1 for current ones
@@ -72,25 +73,23 @@ class Percept:
         # pre_best_tag records best tag previous to the current one
         pre_best_tag = [dict()] * length
 
-        # Record gram set for characters in the sentence
-        gram_set = [set()] * length
-        gram_set[0] = get_gram(line, 0)
+        if length > 0:
+            gram_set.append(get_gram(line, 0))  # Record get_gram results
 
-        # Initialization for first character
-        for tag in self.tag_set:
-            # Score and store
-            pre_best_score[0][tag] = score(gram_set[0], '*', tag)
+            # Initialization for first character
+            for tag in self.tag_set:
+                # Score and store
+                pre_best_score[0][tag] = self.score(gram_set[0], '*', tag)
 
         # 0 (first) was initialized above
         for i in range(1, length):
-            gram_set[i] = get_gram(line, i)
-
+            gram_set.append(get_gram(line, i))
             for tag in self.tag_set:
                 pre_best_tag[i][tag] = \
                     self.get_best_pretag(gram_set[i], tag, pre_best_score)
 
             # Current best scores will be previous ones in next loop
-            pre_best_score[0] = pre_best_score[1].copy()
+            pre_best_score[0] = pre_best_score[1].deepcopy()
 
         # Get final best tag
         total_best_score = pre_best_score[0][self.rand_tag]
@@ -102,20 +101,24 @@ class Percept:
                 total_best_score = tag_best_score
                 final_best_tag = tag
 
-        return find_best_seq(pre_best_tag, final_best_tag)
+        return self.find_best_path(pre_best_tag, final_best_tag)
 
 
     # Train by a line that has been tagged as real_tag_seq
     def train_by_line(self, line, real_tag_seq, sum_vec):
-        pred_best_seq = pred_by_line(line)  # Get predicted tag sequence
+        length = len(line)
+        gram_set = []
+
+        # Get predicted tag sequence
+        pred_best_seq = self.pred_by_line(line, gram_set)
 
         for i in range(length):
             real_tag = real_tag_seq[i]
             pred_tag = pred_best_seq[i]
             # If prediction result isn't correct
-            if pred_tag[i] != real_tag[i]
+            if pred_tag != real_tag:
                 # Adjustment for common node features
-                for gram in gram_set:
+                for gram in gram_set[i]:
                     real_index = self.dict[gram + '_' + real_tag]
                     pred_index = self.dict[gram + '_' + pred_tag]
 
