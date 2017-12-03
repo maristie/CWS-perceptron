@@ -15,7 +15,7 @@ def get_gram(line, index):
         gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn',
                      line[i - 1] + '_p', line[i - 1:i + 1] + '_pm',
                      line[i - 1] + line[i + 1] + '_pn',
-                     line[i - 1:i + 2]}
+                     line[i - 1:i + 2]} # No need for position information
 
     return gram_set
 
