@@ -9,6 +9,11 @@ class Percept:
         self.remain_label_set = label_set
         self.rand_label = self.remain_label_set.pop()
 
+
+    def get_wgt_vec():
+        return self.wgt_vec.copy()
+
+
     # Score with gram set and label
     def score(self, gram_set, label):
         total_score = 0
@@ -19,6 +24,7 @@ class Percept:
                 total_score += self.wgt_vec[self.dict[feat]]
 
         return total_score
+
 
     def get_best_label(self, gram_set):
         # Pick any label as the initial best label
@@ -32,6 +38,7 @@ class Percept:
                 best_label = label
 
         return best_label
+
 
     # Train by a line that has been labelled as seq_label
     def train_by_line(self, line, seq_label, sum_vec):
@@ -55,6 +62,7 @@ class Percept:
                     sum_vec[pred_index] -= self.remain_train_times
                     self.remain_train_times -= 1
 
+
     def train_times_count(self, train_file, loop_times):
         train_times = 0
         with open(train_file) as f:
@@ -64,6 +72,7 @@ class Percept:
             train_times += len(parse(line)[0])  # Add the length of sentence
 
         return train_times * loop_times # Calculate the training times
+
 
     def train(self, train_file, loop_times):
         self.total_train_times = self.remain_train_times = \
@@ -87,6 +96,7 @@ class Percept:
         for i in range(len(self.wgt_vec)):
             self.wgt_vec[i] = \
                 init_vec[i] + sum_vec[i] / (self.total_train_times + 1)
+
 
     # Return a label sequence
     def pred_by_line(self, line):
