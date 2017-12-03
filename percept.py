@@ -69,7 +69,7 @@ class Percept:
                     sum_vec[real_index] += self.train_times
                     sum_vec[pred_index] -= self.train_times
 
-                    self.train_times += 1
+            self.train_times += 1
 
 
     def train(self, train_file, iter_times):
