@@ -8,7 +8,10 @@ def get_gram(line, index):
     temp_line = '^' + line + '$'
 
     # Get unigrams and bigrams with position information
+<<<<<<< HEAD
     # p for previous, m for middle, n for next
+=======
+>>>>>>> Remove position information for edge feats
     gram_set = {temp_line[i] + '_m', temp_line[i + 1] + '_n',
                 temp_line[i - 1] + '_p', temp_line[i:i + 2] + '_mn', temp_line[i - 1:i + 1] + '_pm',
                 temp_line[i - 1] + temp_line[i + 1] + '_pn',
@@ -30,33 +33,25 @@ def add_node_feat(line, dict, tag_set):
                 dict_len = len(dict)
                 dict[feat] = dict_len
 
-def add_edge_feat(max_len, dict, tag_set):
-    for suftag in tag_set:
-        dict_len = len(dict)
-        dict['^_0_' + suftag] = dict_len
-
-    for pretag in tag_set:
+def add_edge_feat(dict, tag_set):
+    for pretag in tag_set | {'^'}:   # Mark begin of a sentence as ^
         for suftag in tag_set:
-            for i in range(max_len):
-                dict_len = len(dict)
-                dict[pretag + '_' + str(i) + '_' + suftag] = dict_len
+            dict_len = len(dict)
+            dict[pretag + '_' + suftag] = dict_len
 
 # Get dictionary
 def get_dict(train_file, tag_set):
     dict = {}
-    max_line_len = 0    # Record the maximum length of sentence
 
     with open(train_file, 'r', encoding = 'UTF-8') as f:
         lines = f.readlines()
 
     # Add node features to dictionary from train file
     for line in lines:
-        if len(line) > max_line_len:
-            max_line_len = len(line)
-
         add_node_feat(parse(line)[0], dict, tag_set)
 
     # Add edge features
+<<<<<<< HEAD
 <<<<<<< HEAD
     for pretag in tag_set | {'*'}:
         for suftag in tag_set:
@@ -65,5 +60,8 @@ def get_dict(train_file, tag_set):
 =======
     add_edge_feat(max_line_len, dict, tag_set)
 >>>>>>> Add position information for node and edge feats
+=======
+    add_edge_feat(dict, tag_set)
+>>>>>>> Remove position information for edge feats
 
     return dict

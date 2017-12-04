@@ -25,18 +25,24 @@ class Percept:
             if feat in self.dict:
                 total_score += self.wgt_vec[self.dict[feat]]
 
-        total_score += self.wgt_vec[self.dict[pretag + '_' + tag]]
-
         return total_score
 
 
     def get_best_pretag(self, gram_set, tag, pre_best_score):
         # Set initial best_score as negative infinity
         best_score = float('-inf')
+        # Node feature set
+        node_feat_set = set()
+        for elem in gram_set:
+            node_feat_set.add(elem + '_' + tag)
+
         # Get best_score and best_pretag by comparing
-        for pretag in self.remain_tag_set:
-            pretag_score = \
-                pre_best_score[0][pretag] + self.score(gram_set, pretag, tag)
+        for pretag in self.tag_set:
+            # Add edge feature
+            feat_set = node_feat_set | {pretag + '_' + tag}
+
+            pretag_score = pre_best_score[0][pretag] + self.score(feat_set)
+
             if pretag_score > best_score:
                 best_score = pretag_score
                 best_pretag = pretag
@@ -72,9 +78,20 @@ class Percept:
         gram_set.append(get_gram(line, 0))
 
         # Initialization for first character
+        gram_set = get_gram(line, 0)
         for tag in self.tag_set:
+            feat_set = set()
+            # Add node features
+            for elem in gram_set:
+                feat_set.add(elem + '_' + tag)
+            # Add edge feature
+            feat_set.add('^_' + tag)
             # Score and store
+<<<<<<< HEAD
             pre_best_score[0][tag] = self.score(gram_set[0], '*', tag)
+=======
+            pre_best_score[0][tag] = self.score(feat_set)
+>>>>>>> Remove position information for edge feats
 
         # 0 (first) was initialized above
         for i in range(1, length):
