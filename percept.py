@@ -81,7 +81,7 @@ class Percept:
             gram_set.append(get_gram(line, i))
             for tag in self.tag_set:
                 pre_best_tag[i][tag] = \
-                    self.get_best_pretag(gram_set[i], tag, pre_best_score)
+                    self.get_best_pretag(get_gram(line, i), tag, pre_best_score)
 
             for tag in self.tag_set:
                 # Current best scores will be previous ones in next loop
