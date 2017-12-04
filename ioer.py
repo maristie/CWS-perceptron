@@ -3,11 +3,16 @@
 def segment(line, tag, output_file):
     with open(output_file, 'a', encoding = 'UTF-8') as f:
         for i in range(len(line)):
-            f.write(line[i])
-            if i == len(line) - 1:
-                f.write('\r\n')
-            elif tag[i] == 'E' or tag[i] == 'S':
-                f.write('  ')
+            if tag[i] == 'B':
+                f.write(' ' + line[i])
+            elif tag[i] == 'E':
+                f.write(line[i] + ' ')
+            elif tag[i] == 'S':
+                f.write(' ' + line[i] + ' ')
+            else:
+                f.write(line[i])
+
+        f.write('\r\n') # Newline
 
 
 def output_pred(percept, test_file, output_file):
