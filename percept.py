@@ -6,10 +6,7 @@ class Percept:
     def __init__(self, feat_dict, tag_set):
         self.dict = feat_dict
         self.wgt_vec = [0] * len(self.dict)
-
-        # Training configurations
-        self.remain_tag_set = tag_set.copy()
-        self.rand_tag = self.remain_tag_set.pop()
+        self.tag_set = tag_set
 
 
     def get_wgt_vec(self):  # Get the copy of weight vector
@@ -33,11 +30,10 @@ class Percept:
 
 
     def get_best_tag(self, gram_set):
-        # Pick any tag as the initial best tag
-        best_score = self.score(gram_set, self.rand_tag)
-        best_tag = self.rand_tag
+        # Set initial best_score as negative infinity
+        best_score = float('-inf')
 
-        for tag in self.remain_tag_set:
+        for tag in self.tag_set:
             tag_score = self.score(gram_set, tag)
             if tag_score > best_score:
                 best_score = tag_score
