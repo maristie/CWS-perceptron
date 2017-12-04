@@ -18,11 +18,10 @@ class Percept:
 
 
     # Score with gram set and tag
-    def score(self, gram_set, tag):
+    def score(self, feat_set):
         total_score = 0
 
-        for elem in gram_set:
-            feat = elem + '_' + tag
+        for feat in feat_set:
             if feat in self.dict:
                 total_score += self.wgt_vec[self.dict[feat]]
 
@@ -34,7 +33,12 @@ class Percept:
         best_score = float('-inf')
 
         for tag in self.tag_set:
-            tag_score = self.score(gram_set, tag)
+            feat_set = set()    # Feature set
+            for elem in gram_set:
+                feat_set.add(elem + '_' + tag)
+
+            tag_score = self.score(feat_set)    # Score by features
+
             if tag_score > best_score:
                 best_score = tag_score
                 best_tag = tag
