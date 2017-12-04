@@ -10,7 +10,7 @@ output_file = 'answer.txt'  # Segmented result of test data
 dict_file = 'dict_unstruct.txt'         # Dictionary file
 wgt_vec_file = 'wgt_vec_unstruct.txt'   # Trained weight vector data
 
-iter_times = 20             # Iteration times
+iter_times = 10             # Iteration times
 
 tag_set = {'B', 'M', 'E', 'S'}    # tags used for segmentation
 
@@ -32,4 +32,5 @@ perc = Percept(feat_dict, tag_set)
 wgt_vec = input_wgt_vec(wgt_vec_file)
 perc.set_wgt_vec(wgt_vec)
 
+# Segmentation prediction using the perceptron and output result
 output_pred(perc, test_file, output_file)
