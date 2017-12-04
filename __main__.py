@@ -3,7 +3,7 @@ from percept import Percept
 from ioer import output_pred, output_dict, output_wgt_vec, \
                  input_dict, input_wgt_vec
 
-train_file = 'train.txt'    # Train data
+train_file = 'train_small.txt'    # Train data
 test_file = 'test.txt'      # Test data
 output_file = 'answer.txt'  # Segmented result of test data
 
@@ -26,11 +26,15 @@ perc = Percept(feat_dict, tag_set)
 
 # Train and output weight vector
 perc.train(train_file, iter_times)
-output_wgt_vec(perc.get_wgt_vec(), wgt_vec_file)
+# output_wgt_vec(perc.get_wgt_vec(), wgt_vec_file)
 
 # Set weight vector from existing file that has been trained
 # wgt_vec = input_wgt_vec(wgt_vec_file)
 # perc.set_wgt_vec(wgt_vec)
 
+<<<<<<< HEAD
 # Segmentation prediction using the perceptron and output result
 output_pred(perc, test_file, output_file)
+=======
+# output_pred(perc, test_file, output_file)
+>>>>>>> Temporary fix for get_gram

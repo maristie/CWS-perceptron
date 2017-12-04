@@ -31,6 +31,7 @@ class Percept:
 
 
     def get_best_pretag(self, gram_set, tag, pre_best_score):
+<<<<<<< HEAD
         # Pick any pretag as the initial best pretag
         best_score = \
             pre_best_score[0][self.rand_tag] \
@@ -40,6 +41,10 @@ class Percept:
 
         print(pre_best_score)
 
+=======
+        # Set initial best_score as negative infinity
+        best_score = float('-inf')
+>>>>>>> Temporary fix for get_gram
         # Get best_score and best_pretag by comparing
         for pretag in self.remain_tag_set:
             pretag_score = \
@@ -47,8 +52,6 @@ class Percept:
             if pretag_score > best_score:
                 best_score = pretag_score
                 best_pretag = pretag
-
-        print(best_pretag)
 
         # Set best score for current tag
         pre_best_score[1][tag] = best_score
@@ -71,10 +74,6 @@ class Percept:
     # gram_set is a trick to improve space and time performance
     def pred_by_line(self, line, gram_set = []):
         length = len(line)
-
-        # If it's an empty line, then return an empty sequence
-        if length == 0:
-            return []
 
         # 0 for previous best scores of different tags, and 1 for current ones
         pre_best_score = [{} for i in range(2)]
