@@ -32,9 +32,5 @@ perc.train(train_file, iter_times)
 # wgt_vec = input_wgt_vec(wgt_vec_file)
 # perc.set_wgt_vec(wgt_vec)
 
-<<<<<<< HEAD
 # Segmentation prediction using the perceptron and output result
 output_pred(perc, test_file, output_file)
-=======
-# output_pred(perc, test_file, output_file)
->>>>>>> Temporary fix for get_gram
