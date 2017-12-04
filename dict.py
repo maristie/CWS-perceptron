@@ -1,22 +1,19 @@
 from parser import parse
 
 def get_gram(line, index):
-    i = index
     length = len(line)
     gram_set = set()
+    i = index + 1
+
+    # ^ for begin, $ for end
+    temp_line = '^' + line + '$'
 
     # Get unigrams and bigrams with position information
     # p for previous, m for middle, n for next
-    if length > 0:
-        gram_set.add(line[i] + '_m')
-        if i == 0 and i + 1 < length:
-            gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn'}
-        elif i == length - 1:
-            gram_set |= {line[i - 1] + '_p', line[i - 1:i + 1] + '_pm'}
-        else:
-            gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn',
-                        line[i - 1] + '_p', line[i - 1:i + 1] + '_pm',
-                        line[i - 1] + line[i + 1] + '_pn'}
+    gram_set |= {temp_line[i] + '_m', temp_line[i + 1] + '_n',
+                 temp_line[i - 1] + '_p', temp_line[i:i + 2] + '_mn', temp_line[i - 1:i + 1] + '_pm',
+                 temp_line[i - 1] + temp_line[i + 1] + '_pn',
+                 temp_line[i - 1:i + 2]}
 
     return gram_set
 
