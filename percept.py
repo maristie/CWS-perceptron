@@ -38,6 +38,8 @@ class Percept:
 
         best_pretag = self.rand_tag
 
+        print(pre_best_score)
+
         # Get best_score and best_pretag by comparing
         for pretag in self.remain_tag_set:
             pretag_score = \
@@ -45,6 +47,8 @@ class Percept:
             if pretag_score > best_score:
                 best_score = pretag_score
                 best_pretag = pretag
+
+        print(best_pretag)
 
         # Set best score for current tag
         pre_best_score[1][tag] = best_score
@@ -73,9 +77,9 @@ class Percept:
             return []
 
         # 0 for previous best scores of different tags, and 1 for current ones
-        pre_best_score = [dict()] * 2
+        pre_best_score = [{} for i in range(2)]
         # pre_best_tag records best tag previous to the current one
-        pre_best_tag = [dict()] * length
+        pre_best_tag = [{} for i in range(length)]
 
         # Record get_gram results
         gram_set.append(get_gram(line, 0))
@@ -92,8 +96,9 @@ class Percept:
                 pre_best_tag[i][tag] = \
                     self.get_best_pretag(gram_set[i], tag, pre_best_score)
 
-            # Current best scores will be previous ones in next loop
-            pre_best_score[0] = pre_best_score[1].copy()
+            for tag in self.tag_set:
+                # Current best scores will be previous ones in next loop
+                pre_best_score[0][tag] = pre_best_score[1][tag]
 
         # Get final best tag
         total_best_score = pre_best_score[0][self.rand_tag]
