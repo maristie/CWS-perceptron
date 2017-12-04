@@ -17,7 +17,7 @@ class Percept:
         self.wgt_vec = wgt_vec.copy()
 
 
-    # Score with gram set and tag
+    # Score with feature set
     def score(self, feat_set):
         total_score = 0
 
