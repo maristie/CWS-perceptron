@@ -75,6 +75,10 @@ class Percept:
     def pred_by_line(self, line, gram_set = []):
         length = len(line)
 
+        # If it's an empty line, then return an empty tag sequence
+        if length == 0:
+            return []
+
         # 0 for previous best scores of different tags, and 1 for current ones
         pre_best_score = [{} for i in range(2)]
         # pre_best_tag records best tag previous to the current one
