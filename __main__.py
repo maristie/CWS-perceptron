@@ -10,7 +10,7 @@ output_file = 'answer.txt'  # Segmented result of test data
 dict_file = 'dict_unstruct.txt'         # Dictionary file
 wgt_vec_file = 'wgt_vec_unstruct.txt'   # Trained weight vector data
 
-iter_times = 5              # Iteration times
+iter_times = 20             # Iteration times
 
 tag_set = {'B', 'M', 'E', 'S'}    # tags used for segmentation
 
