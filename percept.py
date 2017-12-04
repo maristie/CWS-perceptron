@@ -66,16 +66,17 @@ class Percept:
 
     # Return a predicted tag sequence using Viterbi algorithm
     # gram_set is a trick to improve space and time performance
-    def pred_by_line(self, line, gram_set = []):
+    def pred_by_line(self, line):
         length = len(line)
+
+        # If it's an empty set, then return empty list
+        if length == 0:
+            return []
 
         # 0 for previous best scores of different tags, and 1 for current ones
         pre_best_score = [{} for i in range(2)]
         # pre_best_tag records best tag previous to the current one
         pre_best_tag = [{} for i in range(length)]
-
-        # Record get_gram results
-        gram_set.append(get_gram(line, 0))
 
         # Initialization for first character
         gram_set = get_gram(line, 0)
@@ -91,7 +92,6 @@ class Percept:
 
         # 0 (first) was initialized above
         for i in range(1, length):
-            gram_set.append(get_gram(line, i))
             for tag in self.tag_set:
                 pre_best_tag[i][tag] = \
                     self.get_best_pretag(get_gram(line, i), tag, pre_best_score)
@@ -101,10 +101,9 @@ class Percept:
                 pre_best_score[0][tag] = pre_best_score[1][tag]
 
         # Get final best tag
-        total_best_score = pre_best_score[0][self.rand_tag]
-        final_best_tag = self.rand_tag
+        total_best_score = float('-inf')
 
-        for tag in self.remain_tag_set:
+        for tag in self.tag_set:
             tag_best_score = pre_best_score[0][tag]
             if tag_best_score > total_best_score:
                 total_best_score = tag_best_score
@@ -116,10 +115,9 @@ class Percept:
     # Train by a line that has been tagged as real_tag_seq
     def train_by_line(self, line, real_tag_seq, sum_vec):
         length = len(line)
-        gram_set = []
 
         # Get predicted tag sequence
-        pred_best_seq = self.pred_by_line(line, gram_set)
+        pred_best_seq = self.pred_by_line(line)
 
         for i in range(length):
             real_tag = real_tag_seq[i]
@@ -127,7 +125,7 @@ class Percept:
             # If prediction result isn't correct
             if pred_tag != real_tag:
                 # Adjustment for common node features
-                for gram in gram_set[i]:
+                for gram in get_gram(line, i):
                     real_index = self.dict[gram + '_' + real_tag]
                     pred_index = self.dict[gram + '_' + pred_tag]
 
@@ -139,8 +137,8 @@ class Percept:
 
                 # Adjustment for edge features
                 if i == 0:
-                    real_edge = '*_' + real_tag
-                    pred_edge = '*_' + pred_tag
+                    real_edge = '^_' + real_tag
+                    pred_edge = '^_' + pred_tag
                 else:
                     real_edge = real_tag_seq[i - 1] + '_' + real_tag
                     pred_edge = pred_best_seq[i - 1] + '_' + pred_tag

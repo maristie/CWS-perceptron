@@ -3,7 +3,7 @@ from percept import Percept
 from ioer import output_pred, output_dict, output_wgt_vec, \
                  input_dict, input_wgt_vec
 
-train_file = 'train_small.txt'    # Train data
+train_file = 'train.txt'    # Train data
 test_file = 'test.txt'      # Test data
 output_file = 'answer.txt'  # Segmented result of test data
 

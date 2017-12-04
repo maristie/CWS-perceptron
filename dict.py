@@ -47,6 +47,7 @@ def get_dict(train_file, tag_set):
     for line in lines:
         add_node_feat(parse(line)[0], dict, tag_set)
 
+    # Add edge features
     add_edge_feat(dict, tag_set)
 
     return dict
