@@ -7,15 +7,16 @@ def get_gram(line, index):
 
     # Get unigrams and bigrams with position information
     # p for previous, m for middle, n for next
-    gram_set.add(line[i] + '_m')
-    if i == 0 and i + 1 < length:
-        gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn'}
-    elif i == length - 1:
-        gram_set |= {line[i - 1] + '_p', line[i - 1:i + 1] + '_pm'}
-    else:
-        gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn',
-                     line[i - 1] + '_p', line[i - 1:i + 1] + '_pm',
-                     line[i - 1] + line[i + 1] + '_pn'}
+    if length > 0:
+        gram_set.add(line[i] + '_m')
+        if i == 0 and i + 1 < length:
+            gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn'}
+        elif i == length - 1:
+            gram_set |= {line[i - 1] + '_p', line[i - 1:i + 1] + '_pm'}
+        else:
+            gram_set |= {line[i + 1] + '_n', line[i:i + 2] + '_mn',
+                        line[i - 1] + '_p', line[i - 1:i + 1] + '_pm',
+                        line[i - 1] + line[i + 1] + '_pn'}
 
     return gram_set
 
