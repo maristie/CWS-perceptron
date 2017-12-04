@@ -25,7 +25,7 @@ feat_dict = input_dict(dict_file)
 perc = Percept(feat_dict, tag_set)
 
 # Train and output weight vector
-perc.train(train_file, iter_times)
+# perc.train(train_file, iter_times)
 # output_wgt_vec(perc.get_wgt_vec(), wgt_vec_file)
 
 # Set weight vector from existing file that has been trained

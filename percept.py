@@ -87,11 +87,7 @@ class Percept:
             # Add edge feature
             feat_set.add('^_' + tag)
             # Score and store
-<<<<<<< HEAD
-            pre_best_score[0][tag] = self.score(gram_set[0], '*', tag)
-=======
             pre_best_score[0][tag] = self.score(feat_set)
->>>>>>> Remove position information for edge feats
 
         # 0 (first) was initialized above
         for i in range(1, length):
