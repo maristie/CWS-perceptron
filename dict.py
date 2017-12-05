@@ -1,3 +1,5 @@
+from collections import Counter # For counting features
+
 from parser import parse
 
 def get_gram(line, index):
@@ -16,29 +18,29 @@ def get_gram(line, index):
 
     return gram_set
 
-# Add feature from a sentence to the dictionary
-def add_feat(line, dict, tag_set):
-    line_gram_set = set()
-
-    for i in range(len(line)):
-        line_gram_set |= get_gram(line, i)
-
-    for elem in line_gram_set:
-        for tag in tag_set:
-            feat = elem + '_' + tag
-            if feat not in dict:
-                dict_len = len(dict)
-                dict[feat] = dict_len
-
-# Get dictionary
 def get_dict(train_file, tag_set):
     dict = {}
+    gram_list = []
 
     with open(train_file, 'r', encoding = 'UTF-8') as f:
         line = f.readline() # Initial line
 
         while line != '':
-            add_feat(parse(line)[0], dict, tag_set)
+            # Get features in a list
+            temp = parse(line)[0]
+            for i in range(len(temp)):
+                gram_list.extend(get_gram(temp, i))
+
             line = f.readline()
+
+    ctr = Counter(gram_list)
+    length = 0
+
+    # Add features to dictionary
+    for elem in ctr:
+        if ctr[elem] > 1:
+            for tag in tag_set:
+                dict[elem + '_' + tag] = length
+                length += 1
 
     return dict

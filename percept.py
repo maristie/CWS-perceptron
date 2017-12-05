@@ -17,6 +17,10 @@ class Percept:
         self.wgt_vec = wgt_vec.copy()
 
 
+    def get_dict(self):
+        return self.dict
+
+
     # Score with feature set
     def score(self, feat_set):
         total_score = 0
@@ -60,14 +64,18 @@ class Percept:
             # If prediction result isn't correct
             if pred_tag != real_tag:
                 for gram in gram_set:
-                    real_index = self.dict[gram + '_' + real_tag]
-                    pred_index = self.dict[gram + '_' + pred_tag]
+                    real_feat = gram + '_' + real_tag
+                    pred_feat = gram + '_' + pred_tag
 
-                    self.wgt_vec[real_index] += 1   # Plus correct component
-                    self.wgt_vec[pred_index] -= 1   # Minus wrong component
+                    if real_feat in self.dict:  # If the feature exists in dict
+                        real_index = self.dict[gram + '_' + real_tag]
+                        pred_index = self.dict[gram + '_' + pred_tag]
 
-                    sum_vec[real_index] += self.train_times
-                    sum_vec[pred_index] -= self.train_times
+                        self.wgt_vec[real_index] += 1   # Plus correct component
+                        self.wgt_vec[pred_index] -= 1   # Minus wrong component
+
+                        sum_vec[real_index] += self.train_times
+                        sum_vec[pred_index] -= self.train_times
 
             # No matter prediction correct or wrong, train_times increments by 1
             self.train_times += 1
@@ -107,3 +115,20 @@ class Percept:
             tag.append(self.get_best_tag(gram_set))
 
         return tag
+
+    # Cut unimportant features
+    def feat_cut(self, threshold):
+        length = 0
+        new_dict = {}
+        new_wgt_vec = []
+
+        for key in self.dict:
+            feat_pos = self.dict[key]
+            feat_wgt = self.wgt_vec[feat_pos]
+            if abs(feat_wgt) > threshold:
+                new_dict[key] = length
+                new_wgt_vec.append(feat_wgt)
+                length += 1
+
+        self.dict = new_dict
+        self.wgt_vec = new_wgt_vec
