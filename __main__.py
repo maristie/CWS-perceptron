@@ -7,8 +7,8 @@ train_file = 'train.txt'    # Train data
 test_file = 'test.txt'      # Test data
 output_file = 'answer.txt'  # Segmented result of test data
 
-dict_file = 'dict_dev.txt'  # Dictionary file
-wgt_vec_file = 'wgt_vec_dev.txt'    # Trained weight vector data
+dict_file = 'dict_struct.txt'   # Dictionary file
+wgt_vec_file = 'wgt_vec_struct.txt' # Trained weight vector data
 
 iter_times = 10             # Iteration times
 
@@ -31,7 +31,7 @@ wgt_vec = input_wgt_vec(wgt_vec_file)
 # Set weight vector as the above one
 perc.set_wgt_vec(wgt_vec)
 
-# Feature cutting
+# Feature cutting, all features whose weight is less than 1e-1 is deleted
 # perc.feat_cut(1e-1)
 
 # Output dictionary and weight vector
