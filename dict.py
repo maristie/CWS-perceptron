@@ -36,9 +36,9 @@ def get_dict(train_file, tag_set):
     ctr = Counter(gram_list)
     length = 0
 
-    # Add node features to dictionary
+    # Add mixed node & edge features to dictionary
     for elem in ctr:
-        if ctr[elem] > 1:
+        if ctr[elem] > 1:   # Only grams whose frequency > 1 can be added
             for pretag in tag_set | {'^'}:
                 for suftag in tag_set:
                     dict[elem + '_' + pretag + '_' + suftag] = length
