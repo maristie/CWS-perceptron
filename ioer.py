@@ -20,13 +20,16 @@ def output_pred(percept, test_file, output_file):
     with open(output_file, 'w', encoding = 'UTF-8') as f: pass
 
     with open(test_file, 'r', encoding = 'UTF-8') as f:
-        lines = f.readlines()
+        raw_line = f.readline()
 
-    for raw_line in lines:
-        line = raw_line.rstrip('\r\n')  # Remove newline character by rstrip
+        while raw_line != '':
+            line = raw_line.rstrip('\r\n')  # Remove newline character by rstrip
 
-        tag = percept.pred_by_line(line)
-        segment(line, tag, output_file)
+            # Predict tags and segment sentence
+            tag = percept.pred_by_line(line)
+            segment(line, tag, output_file)
+
+            raw_line = f.readline()
 
 
 def output_dict(feat_dict, output_file):
@@ -40,11 +43,13 @@ def input_dict(input_file):
     dict = {}
 
     with open(input_file, 'r', encoding = 'UTF-8') as f:
-        lines = f.readlines()
+        line = f.readline()
 
-    for pair in lines:
-        div_index = pair.rfind(' ')
-        dict[pair[0:div_index]] = int(pair[div_index + 1:])
+        while line != '':
+            div_index = line.rfind(' ')
+            dict[line[0:div_index]] = int(line[div_index + 1:])
+
+            line = f.readline()
 
     return dict
 
@@ -56,13 +61,14 @@ def output_wgt_vec(vec, output_file):
 
 
 def input_wgt_vec(input_file):
+    wgt_vec = []    # Initial weight vector
+
     with open(input_file, 'r', encoding = 'UTF-8') as f:
-        lines = f.readlines()
+        line = f.readline()
 
-    length = len(lines)
-    wgt_vec = [0] * length
+        while line != '':
+            wgt_vec.append(float(line))
 
-    for i in range(length):
-        wgt_vec[i] = float(lines[i])
+            line = f.readline()
 
     return wgt_vec
