@@ -3,12 +3,17 @@ from percept import Percept
 from ioer import output_pred, output_dict, output_wgt_vec, \
                  input_dict, input_wgt_vec
 
+import sys
+from memory_profiler import profile
+
+@profile
+
 train_file = 'train.txt'    # Train data
 test_file = 'test.txt'      # Test data
 output_file = 'answer.txt'  # Segmented result of test data
 
-dict_file = 'dict_struct.txt'         # Dictionary file
-wgt_vec_file = 'wgt_vec_struct.txt'   # Trained weight vector data
+dict_file = 'dict_dev.txt'  # Dictionary file
+wgt_vec_file = 'wgt_vec_dev.txt'    # Trained weight vector data
 
 iter_times = 10             # Iteration times
 

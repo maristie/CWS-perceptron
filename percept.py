@@ -31,15 +31,13 @@ class Percept:
     def get_best_pretag(self, gram_set, tag, pre_best_score):
         # Set initial best_score as negative infinity
         best_score = float('-inf')
-        # Node feature set
-        node_feat_set = set()
-        for elem in gram_set:
-            node_feat_set.add(elem + '_' + tag)
 
         # Get best_score and best_pretag by comparing
         for pretag in self.tag_set:
-            # Add edge feature
-            feat_set = node_feat_set | {pretag + '_' + tag}
+            feat_set = set()
+            # Add features
+            for elem in gram_set:
+                feat_set.add(elem + '_' + pretag + '_' + tag)
 
             pretag_score = pre_best_score[0][pretag] + self.score(feat_set)
 
@@ -84,9 +82,7 @@ class Percept:
             feat_set = set()
             # Add node features
             for elem in gram_set:
-                feat_set.add(elem + '_' + tag)
-            # Add edge feature
-            feat_set.add('^_' + tag)
+                feat_set.add(elem + '_' + '^' + '_' + tag)
             # Score and store
             pre_best_score[0][tag] = self.score(feat_set)
 
@@ -126,31 +122,25 @@ class Percept:
             if pred_tag != real_tag:
                 # Adjustment for common node features
                 for gram in get_gram(line, i):
-                    real_index = self.dict[gram + '_' + real_tag]
-                    pred_index = self.dict[gram + '_' + pred_tag]
+                    if i == 0:
+                        real_pretag = pred_pretag = '^'
+                    else:
+                        real_pretag = real_tag_seq[i - 1]
+                        pred_pretag = pred_best_seq[i - 1]
 
-                    self.wgt_vec[real_index] += 1   # Plus correct component
-                    self.wgt_vec[pred_index] -= 1   # Minus wrong component
+                    real_feat = gram + '_' + real_pretag + '_' + real_tag
+                    pred_feat = gram + '_' + pred_pretag + '_' + pred_tag
 
-                    sum_vec[real_index] += self.train_times
-                    sum_vec[pred_index] -= self.train_times
+                    # Only need to check if one of them is in the dict
+                    if real_feat in self.dict:
+                        real_index = self.dict[real_feat]
+                        pred_index = self.dict[pred_feat]
 
-                # Adjustment for edge features
-                if i == 0:
-                    real_edge = '^_' + real_tag
-                    pred_edge = '^_' + pred_tag
-                else:
-                    real_edge = real_tag_seq[i - 1] + '_' + real_tag
-                    pred_edge = pred_best_seq[i - 1] + '_' + pred_tag
+                        self.wgt_vec[real_index] += 1   # Plus correct component
+                        self.wgt_vec[pred_index] -= 1   # Minus wrong component
 
-                real_index = self.dict[real_edge]
-                pred_index = self.dict[pred_edge]
-
-                self.wgt_vec[real_index] += 1
-                self.wgt_vec[pred_index] -= 1
-
-                sum_vec[real_index] += self.train_times
-                sum_vec[pred_index] -= self.train_times
+                        sum_vec[real_index] += self.train_times
+                        sum_vec[pred_index] -= self.train_times
 
         # No matter prediction correct or wrong, train_times increments by 1
         self.train_times += 1
@@ -175,3 +165,20 @@ class Percept:
         # Averaged perceptron
         for i in range(len(self.wgt_vec)):
             self.wgt_vec[i] -= sum_vec[i] / self.train_times
+
+    # Cut unimportant features
+    def feat_cut(self):
+        length = 0
+        new_dict = {}
+        new_wgt_vec = []
+
+        for key in self.dict:
+            feat_pos = self.dict[key]
+            feat_wgt = self.wgt_vec[feat_pos]
+            if feat_wgt > 1e-3:
+                new_dict[key] = length
+                new_wgt_vec.append(feat_wgt)
+                length += 1
+
+        self.dict = new_dict
+        self.wgt_vec = new_wgt_vec
