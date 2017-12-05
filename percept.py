@@ -27,7 +27,7 @@ class Percept:
 
         return total_score
 
-
+    # Find the best pretag for a certain current tag
     def get_best_pretag(self, gram_set, tag, pre_best_score):
         # Set initial best_score as negative infinity
         best_score = float('-inf')
@@ -65,7 +65,6 @@ class Percept:
 
 
     # Return a predicted tag sequence using Viterbi algorithm
-    # gram_set is a trick to improve space and time performance
     def pred_by_line(self, line):
         length = len(line)
 

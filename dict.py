@@ -30,6 +30,7 @@ def add_node_feat(line, dict, tag_set):
                 dict_len = len(dict)
                 dict[feat] = dict_len
 
+# Add edge features
 def add_edge_feat(dict, tag_set):
     for pretag in tag_set | {'^'}:   # Mark begin of a sentence as ^
         for suftag in tag_set:
