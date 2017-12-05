@@ -37,5 +37,5 @@ perc = Percept(feat_dict, tag_set)
 wgt_vec = input_wgt_vec(wgt_vec_file)
 perc.set_wgt_vec(wgt_vec)
 
-# Segmentation prediction using the perceptron and output result
+# Predict segmentation using the perceptron and output result
 output_pred(perc, test_file, output_file)

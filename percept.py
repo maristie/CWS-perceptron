@@ -151,16 +151,20 @@ class Percept:
 
         sum_vec = [0] * len(self.dict)  # Store the sum of differentials
 
-        with open(train_file, 'r', encoding = 'UTF-8') as f:
-            lines = f.readlines()
 
         for i in range(iter_times):
-            for raw_line in lines:
-                temp_tuple = parse(raw_line)
-                line = temp_tuple[0]    # Line of valid characters
-                tag = temp_tuple[1]     # Tags for each character
+            # Train times = iter_times
+            with open(train_file, 'r', encoding = 'UTF-8') as f:
+                raw_line = f.readline()
 
-                self.train_by_line(line, tag, sum_vec)
+                while raw_line != '':
+                    temp_tuple = parse(raw_line)
+                    line = temp_tuple[0]    # Line of valid characters
+                    tag = temp_tuple[1]     # Tags for each character
+
+                    self.train_by_line(line, tag, sum_vec)  # Train by this line
+
+                    raw_line = f.readline()
 
         # Averaged perceptron
         for i in range(len(self.wgt_vec)):

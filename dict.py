@@ -23,13 +23,15 @@ def get_dict(train_file, tag_set):
     gram_list = []
 
     with open(train_file, 'r', encoding = 'UTF-8') as f:
-        lines = f.readlines()
+        line = f.readline() # Initial line
 
-    # Get features in a list
-    for line in lines:
-        temp = parse(line)[0]
-        for i in range(len(temp)):
-            gram_list.extend(get_gram(temp, i))
+        while line != '':
+            # Get features in a list
+            temp = parse(line)[0]
+            for i in range(len(temp)):
+                gram_list.extend(get_gram(temp, i))
+
+            line = f.readline()
 
     ctr = Counter(gram_list)
     length = 0
