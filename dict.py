@@ -35,9 +35,10 @@ def get_dict(train_file, tag_set):
     dict = {}
 
     with open(train_file, 'r', encoding = 'UTF-8') as f:
-        lines = f.readlines()
+        line = f.readline() # Initial line
 
-    for line in lines:
-        add_feat(parse(line)[0], dict, tag_set)
+        while line != '':
+            add_feat(parse(line)[0], dict, tag_set)
+            line = f.readline()
 
     return dict
