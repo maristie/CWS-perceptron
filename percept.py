@@ -10,11 +10,15 @@ class Percept:
 
 
     def get_wgt_vec(self):  # Get the copy of weight vector
-        return self.wgt_vec.copy()
+        return self.wgt_vec
 
 
     def set_wgt_vec(self, wgt_vec): # Set weight vector as the copy of wgt_vec
-        self.wgt_vec = wgt_vec.copy()
+        self.wgt_vec = wgt_vec
+
+
+    def get_dict(self):
+        return self.dict
 
 
     # Score with feature set
@@ -151,7 +155,6 @@ class Percept:
 
         sum_vec = [0] * len(self.dict)  # Store the sum of differentials
 
-
         for i in range(iter_times):
             # Train times = iter_times
             with open(train_file, 'r', encoding = 'UTF-8') as f:
@@ -171,7 +174,7 @@ class Percept:
             self.wgt_vec[i] -= sum_vec[i] / self.train_times
 
     # Cut unimportant features
-    def feat_cut(self):
+    def feat_cut(self, threshold):
         length = 0
         new_dict = {}
         new_wgt_vec = []
@@ -179,7 +182,7 @@ class Percept:
         for key in self.dict:
             feat_pos = self.dict[key]
             feat_wgt = self.wgt_vec[feat_pos]
-            if feat_wgt > 1e-3:
+            if abs(feat_wgt) > threshold:
                 new_dict[key] = length
                 new_wgt_vec.append(feat_wgt)
                 length += 1
