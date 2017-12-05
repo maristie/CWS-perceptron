@@ -32,7 +32,7 @@ wgt_vec = input_wgt_vec(wgt_vec_file)
 perc.set_wgt_vec(wgt_vec)
 
 # Feature cutting, all features whose weight is less than 1e-1 is deleted
-perc.feat_cut(1e-1)
+# perc.feat_cut(1e-1)
 
 # Output dictionary and weight vector
 # output_dict(perc.get_dict(), dict_file)
