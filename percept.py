@@ -1,24 +1,15 @@
-from dict import get_gram
-from parser import parse
+from parser import parse, get_gram
+
 
 class Percept:
 
-    def __init__(self, feat_dict, tag_set):
-        self.dict = feat_dict
-        self.wgt_vec = [0] * len(self.dict)
+    def __init__(self, wgt_vec, tag_set):
+        self.wgt_vec = wgt_vec
         self.tag_set = tag_set
 
 
-    def get_wgt_vec(self):  # Get the copy of weight vector
+    def get_wgt_vec(self):
         return self.wgt_vec
-
-
-    def set_wgt_vec(self, wgt_vec): # Set weight vector as the copy of wgt_vec
-        self.wgt_vec = wgt_vec
-
-
-    def get_dict(self):
-        return self.dict
 
 
     # Score with feature set
@@ -26,8 +17,8 @@ class Percept:
         total_score = 0
 
         for feat in feat_set:
-            if feat in self.dict:
-                total_score += self.wgt_vec[self.dict[feat]]
+            if feat in self.wgt_vec:
+                total_score += self.wgt_vec[feat]
 
         return total_score
 
@@ -134,16 +125,13 @@ class Percept:
                     real_feat = gram + '_' + real_pretag + '_' + real_tag
                     pred_feat = gram + '_' + pred_pretag + '_' + pred_tag
 
-                    # Only need to check if one of them is in the dict
-                    if real_feat in self.dict:
-                        real_index = self.dict[real_feat]
-                        pred_index = self.dict[pred_feat]
+                    # Only need to check if one of them is in the weight vector
+                    if real_feat in self.wgt_vec:
+                        self.wgt_vec[real_feat] += 1    # Plus correct component
+                        self.wgt_vec[pred_feat] -= 1    # Minus wrong component
 
-                        self.wgt_vec[real_index] += 1   # Plus correct component
-                        self.wgt_vec[pred_index] -= 1   # Minus wrong component
-
-                        sum_vec[real_index] += self.train_times
-                        sum_vec[pred_index] -= self.train_times
+                        sum_vec[real_feat] += self.train_times
+                        sum_vec[pred_feat] -= self.train_times
 
         # No matter prediction correct or wrong, train_times increments by 1
         self.train_times += 1
@@ -152,7 +140,7 @@ class Percept:
     def train(self, train_file, iter_times):
         self.train_times = 1
 
-        sum_vec = [0] * len(self.dict)  # Store the sum of differentials
+        sum_vec = self.wgt_vec.copy()   # Store the sum of differentials
 
         for i in range(iter_times):
             # Train times = iter_times
@@ -169,22 +157,16 @@ class Percept:
                     raw_line = f.readline()
 
         # Averaged perceptron
-        for i in range(len(self.wgt_vec)):
-            self.wgt_vec[i] -= sum_vec[i] / self.train_times
+        for feat in self.wgt_vec:
+            self.wgt_vec[feat] -= sum_vec[feat] / self.train_times
 
-    # Cut unimportant features
+    # Cut unimportant features whose abs(weight) <= threshold
     def feat_cut(self, threshold):
-        length = 0
-        new_dict = {}
-        new_wgt_vec = []
+        new_wgt_vec = {}
 
-        for key in self.dict:
-            feat_pos = self.dict[key]
-            feat_wgt = self.wgt_vec[feat_pos]
+        for feat in self.wgt_vec:
+            feat_wgt = self.wgt_vec[feat]
             if abs(feat_wgt) > threshold:
-                new_dict[key] = length
-                new_wgt_vec.append(feat_wgt)
-                length += 1
+                new_wgt_vec[feat] = feat_wgt
 
-        self.dict = new_dict
         self.wgt_vec = new_wgt_vec
