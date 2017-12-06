@@ -27,4 +27,4 @@ def get_init_vec(train_file, tag_set):
                 for suftag in tag_set:
                     init_vec[elem + '_' + pretag + '_' + suftag] = 0
 
-    return dict
+    return init_vec

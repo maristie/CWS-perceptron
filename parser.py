@@ -47,7 +47,6 @@ def get_gram(line, index):
     # p for previous, m for middle, n for next
     gram_set = {temp_line[i] + '_m', temp_line[i + 1] + '_n',
                 temp_line[i - 1] + '_p', temp_line[i:i + 2] + '_mn', temp_line[i - 1:i + 1] + '_pm',
-                temp_line[i - 1] + temp_line[i + 1] + '_pn',
-                temp_line[i - 1:i + 2]}
+                temp_line[i - 1] + temp_line[i + 1] + '_pn'}
 
     return gram_set
