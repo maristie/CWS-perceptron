@@ -32,42 +32,22 @@ def output_pred(percept, test_file, output_file):
             raw_line = f.readline()
 
 
-def output_dict(feat_dict, output_file):
+def output_wgt_vec(wgt_vec, output_file):
     with open(output_file, 'w', encoding = 'UTF-8') as f:
-        for key in feat_dict:
-            pair = key + ' ' + str(feat_dict[key]) + '\r\n'
+        for feat in wgt_vec:
+            pair = key + ' ' + str(wgt_vec[feat]) + '\r\n'
             f.write(pair)
 
 
-def input_dict(input_file):
-    dict = {}
+def input_wgt_vec(input_file):
+    wgt_vec = {}
 
     with open(input_file, 'r', encoding = 'UTF-8') as f:
         line = f.readline()
 
         while line != '':
             div_index = line.rfind(' ')
-            dict[line[0:div_index]] = int(line[div_index + 1:])
-
-            line = f.readline()
-
-    return dict
-
-
-def output_wgt_vec(vec, output_file):
-    with open(output_file, 'w', encoding = 'UTF-8') as f:
-        for elem in vec:
-            f.write(str(elem) + '\r\n')
-
-
-def input_wgt_vec(input_file):
-    wgt_vec = []    # Initial weight vector
-
-    with open(input_file, 'r', encoding = 'UTF-8') as f:
-        line = f.readline()
-
-        while line != '':
-            wgt_vec.append(float(line))
+            wgt_vec[line[0:div_index]] = float(line[div_index + 1:])
 
             line = f.readline()
 
