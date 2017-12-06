@@ -22,7 +22,7 @@ def get_init_vec(train_file, tag_set):
 
     # Add features to initial vector
     for elem in ctr:
-        if ctr[elem] > 1:
+        if ctr[elem] > 1:   # Only grams whose frequence > 1 can be added
             for tag in tag_set:
                 init_vec[elem + '_' + tag] = 0
 

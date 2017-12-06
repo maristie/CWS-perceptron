@@ -35,7 +35,7 @@ def output_pred(percept, test_file, output_file):
 def output_wgt_vec(wgt_vec, output_file):
     with open(output_file, 'w', encoding = 'UTF-8') as f:
         for feat in wgt_vec:
-            pair = key + ' ' + str(wgt_vec[feat]) + '\r\n'
+            pair = feat + ' ' + str(wgt_vec[feat]) + '\r\n'
             f.write(pair)
 
 
