@@ -18,7 +18,6 @@ def get_init_vec(train_file, tag_set):
             line = f.readline()
 
     ctr = Counter(gram_list)
-    length = 0
 
     # Add features to initial vector
     for elem in ctr:
