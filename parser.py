@@ -37,7 +37,6 @@ def parse(line):
 
 # Get grams for character line[index]
 def get_gram(line, index):
-    length = len(line)
     i = index + 1   # As we've added a header ^
 
     # ^ for begin, $ for end
